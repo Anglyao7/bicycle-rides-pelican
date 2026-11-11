@@ -99,15 +99,17 @@ body{
     linear-gradient(178deg,var(--bg) 0%,var(--bg2) 48%,#0A1F26 100%);
 }
 .bg-aurora{
+  inset:-14%;
   background:
     radial-gradient(46% 34% at 22% 26%, rgba(63,127,232,.20), transparent 70%),
     radial-gradient(40% 30% at 78% 62%, rgba(226,75,54,.18), transparent 70%);
-  filter:blur(14px);
-  animation:drift 34s var(--ease) infinite alternate;
+  will-change:transform;
 }
-@keyframes drift{
-  0%{transform:translate3d(-2%,-1%,0) scale(1.04)}
-  100%{transform:translate3d(3%,2%,0) scale(1.12)}
+.bg-aurora.warm{
+  background:
+    radial-gradient(50% 36% at 74% 22%, rgba(47,160,152,.22), transparent 70%),
+    radial-gradient(44% 32% at 26% 70%, rgba(242,160,60,.20), transparent 70%);
+  opacity:0;
 }
 .bg-chart{
   background-image:
@@ -119,7 +121,7 @@ body{
 }
 .bg-speck{
   background-image:radial-gradient(rgba(239,227,204,.16) .8px,transparent .9px);
-  background-size:5px 5px;opacity:.5;mix-blend-mode:soft-light;
+  background-size:5px 5px;opacity:.34;
 }
 .shell{position:relative;z-index:1}
 
@@ -379,7 +381,7 @@ input[type=color]::-moz-color-swatch{border:0;border-radius:2px}
 .rail-foot .wide{grid-column:1/-1}
 
 /* ---------- generic section chrome ---------- */
-.band{padding:clamp(46px,7vw,96px) 0 0}
+.band{padding-top:clamp(46px,7vw,96px)}
 .band-head{display:flex;align-items:flex-end;gap:20px;flex-wrap:wrap;margin-bottom:26px}
 .band-head .num{
   font-family:ui-monospace,Consolas,monospace;font-size:11px;color:var(--vermilion-lit);
@@ -434,7 +436,7 @@ input[type=color]::-moz-color-swatch{border:0;border-radius:2px}
 .detail figcaption b{color:var(--gold)}
 
 /* ---------- palette ---------- */
-.pal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(178px,1fr));gap:12px}
+.pal-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(156px,1fr));gap:12px}
 .swatch{
   border:1px solid var(--line);border-radius:var(--r-m);overflow:hidden;background:rgba(15,38,46,.6);
   text-align:left;transition:transform .2s var(--ease),border-color .2s,box-shadow .2s;position:relative;
@@ -449,10 +451,10 @@ input[type=color]::-moz-color-swatch{border:0;border-radius:2px}
   position:relative;z-index:1;font-size:9px;letter-spacing:.16em;text-transform:uppercase;
   padding:2px 6px;border-radius:3px;background:rgba(8,20,25,.62);color:#F2E7D2;backdrop-filter:blur(2px);
 }
-.swatch .meta{padding:9px 11px}
-.swatch .nm{font-size:12.5px;color:var(--text)}
-.swatch .hex{font-family:ui-monospace,Consolas,monospace;font-size:11px;color:var(--text-mute);margin-top:2px;letter-spacing:.06em}
-.swatch .cr{display:flex;gap:6px;margin-top:8px}
+.swatch .meta{display:block;padding:9px 11px}
+.swatch .nm{display:block;font-size:12.5px;color:var(--text)}
+.swatch .hex{display:block;font-family:ui-monospace,Consolas,monospace;font-size:11px;color:var(--text-mute);margin-top:3px;letter-spacing:.06em}
+.swatch .cr{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
 .badge{font-size:9px;letter-spacing:.1em;padding:2px 5px;border-radius:3px;border:1px solid;font-family:ui-monospace,Consolas,monospace}
 .badge.pass{color:var(--ok);border-color:rgba(79,180,119,.45);background:rgba(79,180,119,.10)}
 .badge.fail{color:var(--text-mute);border-color:var(--line-soft)}
@@ -553,6 +555,11 @@ footer.foot .right{margin-left:auto;display:flex;gap:14px;flex-wrap:wrap}
   .stage-caption{font-size:9.5px;gap:9px}
   .rail-foot{grid-template-columns:1fr}
 }
+@media (max-width:400px){
+  header.top{gap:10px}
+  .brand-txt{display:none}
+  .top-right{gap:7px}
+}
 @media (prefers-reduced-motion:reduce){
   *{animation-duration:.001s!important;animation-iteration-count:1!important;transition-duration:.001s!important}
   html,body{scroll-behavior:auto}
@@ -567,6 +574,7 @@ footer.foot .right{margin-left:auto;display:flex;gap:14px;flex-wrap:wrap}
 <body>
 <div class="bg-layer bg-grad"></div>
 <div class="bg-layer bg-aurora" id="aurora"></div>
+<div class="bg-layer bg-aurora warm" id="auroraWarm"></div>
 <div class="bg-layer bg-chart"></div>
 <div class="bg-layer bg-speck"></div>
 
@@ -653,9 +661,9 @@ footer.foot .right{margin-left:auto;display:flex;gap:14px;flex-wrap:wrap}
             .artscope .tread{stroke:var(--paper);stroke-width:2.2;opacity:.5;stroke-linecap:round}
             .artscope .tube-ink{fill:none;stroke:var(--ink);stroke-width:calc(8px + var(--stroke) * 1.7);stroke-linecap:round;stroke-linejoin:round}
             .artscope .tube-col{fill:none;stroke:var(--frame);stroke-width:8;stroke-linecap:round;stroke-linejoin:round}
-            .artscope .limb-ink{fill:none;stroke:var(--ink);stroke-width:calc(9px + var(--stroke) * 1.6);stroke-linecap:round;stroke-linejoin:round}
-            .artscope .limb-col{fill:none;stroke:var(--frame);stroke-width:9;stroke-linecap:round;stroke-linejoin:round}
-            .artscope .limb-far{fill:none;stroke:var(--frame2);stroke-width:8;stroke-linecap:round;opacity:.9}
+            .artscope .limb-ink{fill:none;stroke:var(--ink);stroke-width:calc(10px + var(--stroke) * 1.7);stroke-linecap:round;stroke-linejoin:round}
+            .artscope .limb-col{fill:none;stroke:var(--frame);stroke-width:10;stroke-linecap:round;stroke-linejoin:round}
+            .artscope .limb-far{fill:none;stroke:var(--frame2);stroke-width:9;stroke-linecap:round;opacity:.9}
             .artscope .leg-ink{fill:none;stroke:var(--ink);stroke-width:calc(11px + var(--stroke) * 1.5);stroke-linecap:round;stroke-linejoin:round}
             .artscope .leg-col{fill:none;stroke:var(--beak);stroke-width:11;stroke-linecap:round;stroke-linejoin:round}
             .artscope .leg-far{fill:none;stroke:var(--beak2);stroke-width:10;stroke-linecap:round;stroke-linejoin:round}
@@ -827,10 +835,18 @@ footer.foot .right{margin-left:auto;display:flex;gap:14px;flex-wrap:wrap}
             </g>
 
             <g id="gBob">
+              <!-- far leg: drawn behind the body so the flank occludes it -->
+              <g id="gBikeFar">
+                <path class="limb-ink" d="M508 292 C526 312,544 332,548 354 C552 380,542 412,534 440" opacity=".9"/>
+                <path class="limb-far" d="M508 292 C526 312,544 332,548 354 C552 380,542 412,534 440"/>
+                <g transform="translate(532,444) rotate(6)">
+                  <path d="M-14 -8 C-2 -12,14 -8,22 0 C14 6,-2 8,-14 4 Z" class="f-helmet ln" opacity=".85"/>
+                </g>
+              </g>
               <!-- tail -->
               <g id="gTail">
-                <path d="M400 466 C352 446,300 428,262 404 C286 452,316 492,392 512 Z" class="f-body ln"/>
-                <path d="M296 428 C328 452,354 474,386 490 M312 448 C338 468,360 484,388 498" class="hair"/>
+                <path d="M402 466 C366 448,326 436,290 434 L303 452 L280 452 L297 470 L282 477 C318 497,358 508,398 514 Z" class="f-body ln"/>
+                <path d="M306 442 C334 458,360 476,392 490 M300 460 C330 474,356 490,390 502" class="hair"/>
               </g>
               <!-- body -->
               <g id="gBody">
@@ -843,28 +859,30 @@ footer.foot .right{margin-left:auto;display:flex;gap:14px;flex-wrap:wrap}
               </g>
               <!-- wing -->
               <g id="gWing">
-                <path d="M436 560 C418 578,402 598,392 618 C412 610,430 598,448 582 Z" class="f-ink ln" opacity=".9"/>
-                <path d="M456 574 C442 594,430 614,424 634 C442 622,456 606,470 588 Z" class="f-ink ln" opacity=".8"/>
+                <path d="M440 556 C420 574,400 596,388 620 C409 612,429 598,449 580 Z" class="f-ink ln" opacity=".92"/>
+                <path d="M459 570 C445 592,433 614,427 636 C445 624,459 606,473 588 Z" class="f-ink ln" opacity=".86"/>
+                <path d="M478 582 C468 604,460 624,456 644 C472 630,484 612,494 594 Z" class="f-ink ln" opacity=".8"/>
                 <path d="M640 460 C566 444,472 478,430 552 C421 568,431 582,448 578 C526 566,606 536,650 494 C662 482,658 464,640 460 Z" class="f-body ln"/>
                 <path d="M620 470 C556 464,486 496,448 556 M626 484 C566 482,500 510,462 566 M632 498 C580 500,522 524,480 570" class="hair"/>
                 <path d="M636 462 C580 452,510 476,466 520 C520 486,586 470,636 476 Z" class="f-body2" opacity=".7"/>
               </g>
               <!-- neck + head -->
               <g id="gNeckHead">
-                <path d="M690 452 C684 392,726 342,786 328 C810 322,830 338,830 358 C830 380,812 392,792 396 C754 404,736 440,740 494 Z" class="f-body ln"/>
-                <path d="M792 396 C756 406,738 442,740 494 L764 494 C762 446,776 414,800 400 Z" class="f-body2" opacity=".7"/>
-                <path d="M792 306 C780 292,770 286,756 284 C768 296,776 306,782 316 Z" class="f-body ln"/>
-                <ellipse cx="822" cy="344" rx="48" ry="42" class="f-body ln"/>
-                <path d="M796 316 C806 306,824 302,838 306" class="hair"/>
+                <path d="M672 462 C662 392,708 334,776 318 C806 311,834 330,836 358 C838 386,812 400,788 406 C752 414,742 448,748 500 Z" class="f-body ln"/>
+                <path d="M788 406 C752 414,742 448,748 500 L776 500 C772 452,784 420,808 408 Z" class="f-body2" opacity=".7"/>
+                <path d="M784 300 C772 286,760 280,746 278 C758 290,768 300,774 310 Z" class="f-body ln"/>
+                <ellipse cx="822" cy="344" rx="54" ry="47" class="f-body ln"/>
+                <ellipse cx="820" cy="316" rx="44" ry="18" fill="var(--gold)" opacity=".3"/>
+                <path d="M792 312 C806 300,830 296,848 302" class="hair"/>
                 <g id="gPouch">
                   <g id="gFish">
                     <path d="M946 348 C958 332,974 322,990 318 C982 332,982 344,990 356 C972 354,956 354,946 348 Z" fill="var(--fishc)" class="ln"/>
                     <path d="M960 340 L980 330 M960 348 L980 350" class="hair"/>
                   </g>
-                  <path d="M852 342 C852 424,918 476,992 466 C1044 458,1066 412,1078 362 C1010 348,920 342,852 342 Z" fill="url(#pouchG)" class="ln"/>
-                  <path d="M872 366 C880 424,926 456,980 452 M900 356 C908 414,946 444,992 440 M930 350 C938 404,968 434,1008 430" class="hair"/>
-                  <path d="M898 450 C938 474,990 470,1032 438 C1012 466,940 480,898 450 Z" class="f-beak2" opacity=".35"/>
-                  <path d="M852 342 C920 342,1010 348,1078 362" class="thin"/>
+                  <path d="M850 344 C846 414,904 468,978 460 C1036 454,1066 408,1080 362 C1010 344,920 336,850 344 Z" fill="url(#pouchG)" class="ln"/>
+                  <path d="M870 364 C876 414,922 450,974 446 M898 354 C906 406,944 438,990 434 M928 348 C936 398,966 428,1006 424" class="hair"/>
+                  <path d="M896 444 C936 468,988 464,1030 432 C1010 460,938 474,896 444 Z" class="f-beak2" opacity=".35"/>
+                  <path d="M850 344 C920 336,1010 344,1080 362" class="thin"/>
                 </g>
                 <g id="gBeakU">
                   <path d="M852 318 C944 318,1036 332,1092 350 C1101 353,1103 366,1094 370 C1087 373,1080 368,1076 362 C1010 346,924 340,852 346 Z" class="f-beak ln"/>
@@ -876,10 +894,10 @@ footer.foot .right{margin-left:auto;display:flex;gap:14px;flex-wrap:wrap}
                     <circle cx="887" cy="347" r="6" class="nf" stroke="var(--tack2)" stroke-width="3"/>
                   </g>
                 </g>
-                <circle cx="840" cy="332" r="7.5" class="f-ink"/>
-                <circle cx="842.5" cy="329.5" r="2.6" class="f-body"/>
-                <ellipse id="eyelid" cx="840" cy="332" rx="9.5" ry="9.5" class="f-body"/>
-                <path d="M829 317 C836 311,849 312,854 319" class="thin" opacity=".75"/>
+                <circle cx="842" cy="330" r="8.5" class="f-ink"/>
+                <circle cx="845" cy="327" r="3" class="f-body"/>
+                <ellipse id="eyelid" cx="842" cy="330" rx="10.5" ry="10.5" class="f-body"/>
+                <path d="M830 314 C838 307,852 308,858 316" class="thin" opacity=".75"/>
               </g>
 
               <!-- tack -->
@@ -889,18 +907,12 @@ footer.foot .right{margin-left:auto;display:flex;gap:14px;flex-wrap:wrap}
                 <path d="M452 424 C500 406,612 404,662 424 L658 452 C606 436,502 438,456 456 Z" class="f-tack ln"/>
                 <path d="M457 437 C505 420,608 418,660 437" class="nf" stroke="var(--gold)" stroke-width="4" opacity=".9"/>
                 <path d="M462 448 C508 432,606 430,656 447" class="nf" stroke="var(--paper)" stroke-width="2" stroke-dasharray="7 7" opacity=".6"/>
-                <path id="rein2" class="rein" d="M618 266 C726 284,806 314,887 347" opacity=".75"/>
-                <path id="rein1" class="rein" d="M612 250 C720 268,800 300,887 347"/>
+                <path id="rein2" class="rein" d="M760 316 C800 332,850 346,887 352" opacity=".75"/>
+                <path id="rein1" class="rein" d="M770 300 C810 316,852 336,887 347"/>
               </g>
 
               <!-- ============ THE RIDER: a bicycle ============ -->
               <g id="gBike">
-                <path class="limb-ink" d="M508 292 C520 330,528 356,532 404" opacity=".9"/>
-                <path class="limb-far" d="M508 292 C520 330,528 356,532 404"/>
-                <g transform="translate(534,410) rotate(6)">
-                  <path d="M-14 -8 C-2 -12,14 -8,22 0 C14 6,-2 8,-14 4 Z" class="f-helmet ln" opacity=".85"/>
-                </g>
-
                 <g id="gWheelR" transform="translate(478,362)">
                   <circle r="56" class="tire"/>
                   <g id="rotR"></g>
@@ -944,15 +956,18 @@ footer.foot .right{margin-left:auto;display:flex;gap:14px;flex-wrap:wrap}
                 <path d="M462 266 C476 253,520 253,536 264 C528 277,490 283,464 276 Z" class="f-ink ln"/>
                 <path d="M470 262 C486 256,514 256,528 263" class="nf" stroke="var(--gold)" stroke-width="2" opacity=".7"/>
 
-                <!-- arms = handlebars, ending in gloves on the reins -->
+                <!-- handlebar stub, then arms reaching forward to the reins -->
                 <g id="gArms">
-                  <path class="limb-ink" d="M674 272 C654 268,634 262,620 266" opacity=".9"/>
-                  <path class="limb-far" d="M674 272 C654 268,634 262,620 266"/>
-                  <path d="M612 260 C604 262,602 272,610 276 C618 280,628 276,628 268 C628 261,620 258,612 260 Z" class="f-body2 ln"/>
-                  <path class="limb-ink" d="M676 264 C656 252,632 246,614 250"/>
-                  <path class="limb-col" d="M676 264 C656 252,632 246,614 250"/>
-                  <path d="M604 242 C595 244,592 255,601 260 C610 265,622 261,622 252 C622 244,613 240,604 242 Z" class="f-body ln"/>
-                  <path d="M600 250 L610 248 M602 256 L612 254" class="hair"/>
+                  <path class="tube-ink" d="M676 252 C664 249,652 249,640 252"/>
+                  <path class="tube-col" d="M676 252 C664 249,652 249,640 252"/>
+                  <path class="nf" stroke="var(--ink)" stroke-width="10" stroke-linecap="round" d="M640 252 L626 256"/>
+                  <path class="limb-ink" d="M682 276 C712 288,742 302,758 314" opacity=".92"/>
+                  <path class="limb-far" d="M682 276 C712 288,742 302,758 314"/>
+                  <path d="M752 306 C744 308,742 319,750 324 C759 329,770 325,770 316 C770 308,761 304,752 306 Z" class="f-body2 ln"/>
+                  <path class="limb-ink" d="M688 266 C716 274,748 286,766 298"/>
+                  <path class="limb-col" d="M688 266 C716 274,748 286,766 298"/>
+                  <path d="M764 289 C755 291,752 302,761 307 C770 312,782 308,782 299 C782 291,773 287,764 289 Z" class="f-body ln"/>
+                  <path d="M760 297 L771 295 M762 303 L773 301" class="hair"/>
                   <g id="bell" class="bell-hit">
                     <circle cx="644" cy="250" r="9" class="f-gold ln"/>
                     <path d="M636 250 A8 8 0 0 1 652 250" class="thin"/>
@@ -961,9 +976,9 @@ footer.foot .right{margin-left:auto;display:flex;gap:14px;flex-wrap:wrap}
                     <circle cx="644" cy="250" r="17" fill="transparent"/>
                   </g>
                   <g id="bellWaves">
-                    <path class="bell-wave" d="M662 232 A26 26 0 0 1 674 248"/>
-                    <path class="bell-wave" d="M672 222 A38 38 0 0 1 690 246"/>
-                    <path class="bell-wave" d="M682 212 A50 50 0 0 1 706 244"/>
+                    <path class="bell-wave" d="M626 234 A26 26 0 0 0 614 250"/>
+                    <path class="bell-wave" d="M616 224 A38 38 0 0 0 598 248"/>
+                    <path class="bell-wave" d="M606 214 A50 50 0 0 0 582 246"/>
                   </g>
                 </g>
 
@@ -981,14 +996,14 @@ footer.foot .right{margin-left:auto;display:flex;gap:14px;flex-wrap:wrap}
 
                 <!-- near leg straddling the pelican -->
                 <g id="gBikeLeg">
-                  <path class="limb-ink" d="M516 292 C540 320,556 344,558 368 C560 392,548 410,542 424"/>
-                  <path class="limb-col" d="M516 292 C540 320,556 344,558 368 C560 392,548 410,542 424"/>
-                  <circle cx="558" cy="368" r="7" class="f-frame ln"/>
-                  <path d="M547 412 L542 424" class="nf" stroke="var(--body)" stroke-width="10" stroke-linecap="round"/>
+                  <path class="limb-ink" d="M518 294 C562 300,598 328,608 366 C618 398,592 446,576 478"/>
+                  <path class="limb-col" d="M518 294 C562 300,598 328,608 366 C618 398,592 446,576 478"/>
+                  <circle cx="608" cy="366" r="8" class="f-frame ln"/>
+                  <path d="M582 466 L576 478" class="nf" stroke="var(--body)" stroke-width="11" stroke-linecap="round"/>
                   <g id="shoe">
-                    <path d="M528 424 C528 415,546 413,556 419 C570 425,584 430,586 436 C586 442,574 445,556 443 C540 441,528 434,528 424 Z" class="f-helmet ln"/>
-                    <path d="M528 433 C546 441,574 444,586 438 L586 442 C574 447,540 445,528 438 Z" class="f-body ln"/>
-                    <path d="M536 421 L546 427 M544 418 L554 424" class="hair"/>
+                    <path d="M560 478 C560 468,578 465,588 472 C602 479,618 484,622 491 C622 498,608 501,588 499 C572 497,560 489,560 478 Z" class="f-helmet ln"/>
+                    <path d="M560 488 C578 496,608 500,622 493 L622 497 C608 503,572 500,560 493 Z" class="f-body ln"/>
+                    <path d="M568 474 L578 481 M576 471 L586 478" class="hair"/>
                   </g>
                 </g>
               </g>
@@ -1018,10 +1033,10 @@ footer.foot .right{margin-left:auto;display:flex;gap:14px;flex-wrap:wrap}
             <ellipse cx="561" cy="535" rx="181" ry="117" class="guide"/>
             <circle cx="822" cy="344" r="45" class="guide"/>
             <path d="M852 318 L1094 370 L852 346 Z" class="guide"/>
-            <path d="M516 292 L558 368 L542 424 M592 616 L600 662 L588 700 M528 614 L528 660 L520 700" class="guide"/>
+            <path d="M518 294 L608 366 L576 478 M508 292 L548 354 L534 440 M592 616 L600 662 L588 700 M528 614 L528 660 L520 700" class="guide"/>
             <path d="M556 376 L576 376 M566 366 L566 386" class="guide"/>
             <circle cx="478" cy="418" r="5" class="guide"/>
-            <text x="14" y="700" class="guide-t">GROUND · y706</text>
+            <text x="380" y="700" class="guide-t">GROUND · y706</text>
             <text x="14" y="500" class="guide-t">HORIZON · y506</text>
             <text x="486" y="300" class="guide-t">R56 / R47</text>
             <text x="582" y="380" class="guide-t">BB 566,376</text>
@@ -1055,7 +1070,12 @@ footer.foot .right{margin-left:auto;display:flex;gap:14px;flex-wrap:wrap}
             <g>
               <path d="M336 424 L520 392" class="lab-l"/><circle cx="520" cy="392" r="3" class="f-ink"/>
               <rect x="126" y="410" width="212" height="26" rx="3" class="lab-bg"/>
-              <text x="136" y="428" class="lab-t">05 · 曲柄空转 · 12 辐</text>
+              <text x="136" y="428" class="lab-t" id="labSpokes">05 · 曲柄空转 · 12 辐</text>
+            </g>
+            <g>
+              <path d="M498 540 L586 492" class="lab-l"/><circle cx="586" cy="492" r="3" class="f-ink"/>
+              <rect x="286" y="528" width="212" height="26" rx="3" class="lab-bg"/>
+              <text x="296" y="546" class="lab-t">06 · 跨骑 · 腿夹腹侧</text>
             </g>
           </g>
 
@@ -1264,20 +1284,20 @@ footer.foot .right{margin-left:auto;display:flex;gap:14px;flex-wrap:wrap}
       <h3 class="display">谁在骑谁？</h3>
       <p>把命题倒过来之后，所有解剖学都得跟着倒过来。自行车需要一副髋关节（座管顶端）、一双膝关节（车架中轴附近）和两只手（车把末端）。它的手套握住缰绳，缰绳绕过鹈鹕上喙的鼻革铜环——所以「车头仰角」滑块一动，缰绳的贝塞尔控制点会立刻重算，两端始终咬合。</p>
       <div class="callout">
-        <p><b>空转的曲柄。</b>自行车的脚踩在鹈鹕的肩上，而不是自己的脚踏上。于是曲柄和两个轮组自由旋转——这幅画里唯一在做无用功的零件，正是它最卖力的部分。</p>
+        <p><b>空转的曲柄。</b>自行车的两条腿跨在鹈鹕背两侧：近侧那条压住腹翼，远侧那条被躯干挡住，只露出大腿。脚不在自己的脚踏上，于是曲柄和两个轮组自由旋转——这幅画里唯一在做无用功的零件，正是它最卖力的部分。</p>
       </div>
       <p>鹈鹕的腿是真正的双骨反向运动学：髋部随躯干起伏，蹼足按站立相／摆动相交替贴地与前摆，膝关节由余弦定理解出。步幅、起伏、速度三个滑块直接改写这套解算的参数。</p>
       <div class="details">
         <figure class="detail">
-          <svg viewBox="620 196 520 320" class="artscope" aria-label="头部与缰绳细节"><use href="#gRig"/></svg>
+          <svg viewBox="620 196 520 320" class="artscope" aria-label="头部与缰绳细节"></svg>
           <figcaption><b>细节 A</b> 头盔 · 缰绳 · 鼻革</figcaption>
         </figure>
         <figure class="detail">
-          <svg viewBox="416 246 348 216" class="artscope" aria-label="传动系统细节"><use href="#gRig"/></svg>
-          <figcaption><b>细节 B</b> 曲柄 · 链条 · 辐条</figcaption>
+          <svg viewBox="398 252 412 256" class="artscope" aria-label="传动与跨骑腿位细节"></svg>
+          <figcaption><b>细节 B</b> 曲柄 · 跨骑腿位</figcaption>
         </figure>
         <figure class="detail">
-          <svg viewBox="452 588 300 186" class="artscope" aria-label="蹼足步态细节"><use href="#gRig"/></svg>
+          <svg viewBox="452 588 300 186" class="artscope" aria-label="蹼足步态细节"></svg>
           <figcaption><b>细节 C</b> 蹼足 · 落地相</figcaption>
         </figure>
       </div>
@@ -1414,7 +1434,7 @@ let isolated=null;
 /* ---------------- cached nodes ---------------- */
 const N={
   rig:$('#gRig'),bob:$('#gBob'),legs:$('#gLegs'),body:$('#gBody'),wing:$('#gWing'),neck:$('#gNeckHead'),
-  beakU:$('#gBeakU'),pouch:$('#gPouch'),lid:$('#eyelid'),tack:$('#gTack'),bike:$('#gBike'),
+  beakU:$('#gBeakU'),pouch:$('#gPouch'),lid:$('#eyelid'),tack:$('#gTack'),bike:$('#gBike'),bikeFar:$('#gBikeFar'),
   rotR:$('#rotR'),rotF:$('#rotF'),crank:$('#crank'),pedalA:$('#pedalA'),pedalB:$('#pedalB'),arcs:$('#crankArcs'),
   rein1:$('#rein1'),rein2:$('#rein2'),bell:$('#bell'),bellWaves:$('#bellWaves'),
   rays:$('#rays'),sun:$('#gSun'),clouds:$('#gClouds'),gulls:$('#gGulls'),waves:$('#waves'),speck:$('#speck'),
@@ -1437,6 +1457,7 @@ function buildRays(){
 }
 function buildSpokes(){
   const n=Math.round(S.spokes);
+  $('#labSpokes').textContent='05 · 曲柄空转 · '+n+' 辐';
   [N.rotR,N.rotF].forEach(g=>{
     g.textContent='';
     let d='';
@@ -1583,7 +1604,7 @@ function drawLeg(ink,col,footNode,hx,hy,f,sign){
 }
 function updateReins(){
   const P=[478,418];
-  const g1=rot(612,250,P[0],P[1],-S.tilt),g2=rot(618,266,P[0],P[1],-S.tilt);
+  const g1=rot(770,300,P[0],P[1],-S.tilt),g2=rot(760,316,P[0],P[1],-S.tilt);
   let b=rot(887,347,856,336,-gapeA);
   b=rot(b[0],b[1],760,420,nrot);
   const bx=b[0]+ndx,by=b[1]+ndy;
@@ -1612,7 +1633,9 @@ function frame(now){
   const bobY=-S.bob*(.5-.5*Math.cos(4*Math.PI*phase));
   const bobX=2.2*Math.sin(TAU*phase);
   const roll=1.3*Math.sin(TAU*phase);
-  N.rig.setAttribute('transform',`translate(580 706) scale(${S.scale}) translate(-580 -706)`);
+  const rigT=`translate(580 706) scale(${S.scale}) translate(-580 -706) translate(${(-Math.max(0,S.scale-1)*220).toFixed(1)} 0)`;
+  N.rig.setAttribute('transform',rigT);
+  N.shadow.setAttribute('transform',rigT);
   N.bob.setAttribute('transform',`translate(${bobX.toFixed(2)} ${bobY.toFixed(2)}) rotate(${roll.toFixed(2)} 580 540)`);
   N.shadow.setAttribute('rx',(205+bobY*1.4).toFixed(1));
   N.shadow.setAttribute('opacity',(0.2+bobY*0.004).toFixed(3));
@@ -1642,7 +1665,7 @@ function frame(now){
   if(blinkT<=0){blink=1;blinkT=2.6+Math.random()*3.4;}
   if(blink>0)blink=Math.max(0,blink-dt*7);
   const lidK=blink>0?Math.sin(blink*Math.PI):0;
-  N.lid.setAttribute('transform',`translate(840 322.5) scale(1 ${lidK.toFixed(3)}) translate(-840 -322.5)`);
+  N.lid.setAttribute('transform',`translate(842 319.5) scale(1 ${lidK.toFixed(3)}) translate(-842 -319.5)`);
   gapeT-=dt;
   if(gapeT<=0){gapePulse=1;gapeT=5+Math.random()*5;}
   if(gapePulse>0)gapePulse=Math.max(0,gapePulse-dt*1.1);
@@ -1654,6 +1677,7 @@ function frame(now){
 
   /* bicycle */
   N.bike.setAttribute('transform',`rotate(${(-S.tilt).toFixed(2)} 478 418)`);
+  N.bikeFar.setAttribute('transform',`rotate(${(-S.tilt).toFixed(2)} 478 418)`);
   N.rotR.setAttribute('transform',`rotate(${wheelA.toFixed(1)})`);
   N.rotF.setAttribute('transform',`rotate(${(wheelA*1.04).toFixed(1)})`);
   N.crank.setAttribute('transform',`rotate(${crankA.toFixed(1)} 566 376)`);
@@ -1707,6 +1731,10 @@ function frame(now){
       p.node.setAttribute('opacity',(p.life*.42).toFixed(3));
     }else if(p.node.getAttribute('opacity')!=='0'){p.node.setAttribute('opacity','0');}
   }
+
+  if(detailsVisible){
+    if(detailsDirty)buildDetails();else syncDetails();
+  }
 }
 /* ---------------- readouts ---------------- */
 const FMT={
@@ -1729,7 +1757,7 @@ function syncUI(){
   $('#spSeed').textContent=seed;
 }
 let statT=0;
-function scheduleStats(){clearTimeout(statT);statT=setTimeout(updateStats,240);}
+function scheduleStats(){clearTimeout(statT);statT=setTimeout(updateStats,240);detailsDirty=true;}
 function setParam(k,v){
   S[k]=v;
   if(k==='spokes')buildSpokes();
@@ -1753,7 +1781,7 @@ const LAYERS=[
   {ids:['gWing'],key:'WG',name:'翼 · 飞羽',sub:'pivot 640,462',c:'--body2'},
   {ids:['gNeckHead'],key:'HD',name:'颈 · 头 · 喙 · 喉囊',sub:'gape + blink + fish',c:'--pouch'},
   {ids:['gTack'],key:'TK',name:'鞍垫 · 肚带 · 缰绳',sub:'reins recomputed / frame',c:'--tack'},
-  {ids:['gBike'],key:'BK',name:'自行车骑士',sub:'rider · limbs · drivetrain',c:'--frame'},
+  {ids:['gBike','gBikeFar'],key:'BK',name:'自行车骑士',sub:'rider · limbs · drivetrain',c:'--frame'},
   {ids:['gFx'],key:'FX',name:'速度线 · 尘土',sub:'reacts to speed',c:'--gold'},
   {ids:['gTitle'],key:'TT',name:'图版标题 · 印章',sub:'plate furniture',c:'--frame2'}
 ];
@@ -2150,21 +2178,66 @@ const revObs=new IntersectionObserver(es=>{
   es.forEach(en=>{if(en.isIntersecting){en.target.classList.add('in');revObs.unobserve(en.target);}});
 },{rootMargin:'0px 0px -8% 0px',threshold:.06});
 $$('.reveal').forEach((n,i)=>{n.style.transitionDelay=(i%4*70)+'ms';revObs.observe(n);});
-const aurora=$('#aurora'),chart=$('.bg-chart');
+const aurora=$('#aurora'),auroraWarm=$('#auroraWarm'),chart=$('.bg-chart');
 let scrollRaf=0;
 window.addEventListener('scroll',()=>{
   if(scrollRaf)return;
   scrollRaf=requestAnimationFrame(()=>{
     scrollRaf=0;
     const y=window.scrollY||0;
-    aurora.style.filter='blur(14px) hue-rotate('+(y*.022).toFixed(1)+'deg)';
+    aurora.style.transform='translate3d('+(y*.018).toFixed(1)+'px,'+(-y*.05).toFixed(1)+'px,0)';
+    auroraWarm.style.transform='translate3d('+(-y*.026).toFixed(1)+'px,'+(y*.038).toFixed(1)+'px,0)';
+    auroraWarm.style.opacity=Math.min(1,y/1100).toFixed(3);
     chart.style.backgroundPosition='0 '+(y*.12).toFixed(1)+'px, 0 '+(y*.12).toFixed(1)+'px';
   });
 },{passive:true});
 
+/* ---------------- detail insets ----------------
+   Real clones, not <use>: document class rules do not reach a use-element
+   shadow tree, which would leave every cloned shape at the initial fill. */
+const detailSvgs=$$('.detail svg');
+const ATTRS=['transform','opacity','d'];
+let detailSync=[],detailsDirty=true,detailsVisible=false;
+function buildDetails(){
+  detailsDirty=false;
+  detailSync=[];
+  const src=[N.rig,...N.rig.querySelectorAll('*')];
+  detailSvgs.forEach(sv=>{
+    sv.textContent='';
+    const c=N.rig.cloneNode(true);
+    c.removeAttribute('id');
+    $$('[id]',c).forEach(n=>n.removeAttribute('id'));
+    sv.appendChild(c);
+    sv.classList.toggle('wire',S.wire);
+    const dst=[c,...c.querySelectorAll('*')];
+    const pairs=[];
+    for(let i=0;i<src.length;i++){
+      const s=src[i];
+      if(s.tagName==='g'||s.hasAttribute('id')||s.hasAttribute('transform'))pairs.push([s,dst[i]]);
+    }
+    detailSync.push(pairs);
+  });
+  syncDetails();
+}
+function syncDetails(){
+  for(const pairs of detailSync){
+    for(let i=0;i<pairs.length;i++){
+      const s=pairs[i][0],d=pairs[i][1];
+      for(const a of ATTRS){
+        const v=s.getAttribute(a);
+        if(v!==d.getAttribute(a)){if(v===null)d.removeAttribute(a);else d.setAttribute(a,v);}
+      }
+    }
+  }
+}
+if(detailSvgs.length){
+  new IntersectionObserver(es=>{detailsVisible=es[0].isIntersecting;},{rootMargin:'120px'}).observe($('.details'));
+}
+
 /* ---------------- boot ---------------- */
 buildRays();buildSpokes();buildWaves();buildSpeck();buildClouds();buildGulls();buildPuffs();
 buildLayers();syncUI();applyTheme();applyStatic();setPlaying(true);
+buildDetails();
 updateStats();
 raf=requestAnimationFrame(frame);
 window.addEventListener('beforeunload',()=>{cancelAnimationFrame(raf);if(AC)AC.close();});
